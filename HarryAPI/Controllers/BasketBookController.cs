@@ -11,7 +11,7 @@ namespace HarryAPI.Controllers
       
 
         [HttpPost]
-        public Task<double> PostBasket()
+        public Task<double> PostBasket([FromBody] basketRequest request)
         {
             
         }
