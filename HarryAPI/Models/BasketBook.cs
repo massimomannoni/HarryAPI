@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace HarryAPI
 {
@@ -36,9 +35,12 @@ namespace HarryAPI
             else
             {
                 // enter here only when > 1
-                var numberOfDistinctBooks = _books.Distinct().ToList();
+                var numberOfDistinctBooks = _books.GroupBy(b => b.title).ToList();
+
+
+                // check correct index
                 int discount = _discounts[numberOfDistinctBooks.Count - 2];
-                double costDiscoutedBooks = (numberOfDistinctBooks.Count * _unitPrice) * (100 - discount);
+                double costDiscoutedBooks = (((numberOfDistinctBooks.Count * _unitPrice) * (100 - discount)) / 100);
 
                 var numberOfBookNotSubjectToDiscount = numberOfBooksInBasket - numberOfDistinctBooks.Count();
                 var costNotDiscoutedBooks = numberOfBookNotSubjectToDiscount * _unitPrice;

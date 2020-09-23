@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,8 +8,13 @@ namespace HarryAPI.Models.Request
 {
     public class ShoppingBasketRequest
     {
-        List<Book> shoppingBasket;
+        [Required]
+        public List<Book> shoppingBasket { get; set; }
 
-        int[] discountAvailable;
+        [Required]
+        public  int[] discountAvailable { get; set; }
+
+        [Required]
+        public int unitPrice { get; set; }
     }
 }

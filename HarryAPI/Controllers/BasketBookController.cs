@@ -7,16 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HarryAPI.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class BasketBookController : Controller
     {
       
         [HttpGet]
-
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "value1", "value2" };
+        }
 
         [HttpPost]
         public double PostBasket([FromBody] ShoppingBasketRequest request)
         {
-            return 2;
+            BasketBook basketBook = new BasketBook(request.shoppingBasket, request.discountAvailable, request.unitPrice);
+
+            return basketBook.CalculateBasketCost();
+
         }
     }
 }
