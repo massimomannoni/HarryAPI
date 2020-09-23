@@ -38,7 +38,7 @@ namespace HarryAPI
             if (numberOfDistinctBooks == 1)
                 return _unitPrice * numberOfBooksInBasket;
 
-            // all the other case ;)
+            // all the other cases ;)
             float discountPerc = GetDiscountPercentage(numberOfDistinctBooks);
             float unitBookDiscountedPrice = _unitPrice * ((float)(100 - discountPerc) / 100);
             float costDiscoutedBooks = numberOfDistinctBooks * unitBookDiscountedPrice;
