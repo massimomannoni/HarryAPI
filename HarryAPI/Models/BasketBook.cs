@@ -28,34 +28,32 @@ namespace HarryAPI
             // get the total amount of books on the list and - the disctinct values 
             // moltiply the diffence for the base price 
 
-            // if value == 1 there's no discount
+            // we have 1 product
             int numberOfBooksInBasket = _books.Count;
             if (numberOfBooksInBasket == 1)
                 return _unitPrice;
 
-            // enter here only when > 1
+            // we have more products but of the same type aka title
             var numberOfDistinctBooks = _books.GroupBy(b => b.title).Count();
             if (numberOfDistinctBooks == 1)
                 return _unitPrice * numberOfBooksInBasket;
 
-            //  var discountSelector = GetDiscountPercentage(numberOfBooksInBasket > _discounts.Count()) ? (_discounts.Count() -1) : (numberOfBooksInBasket - 2) ;
-            float discountPerc = GetDiscountPercentage(numberOfBooksInBasket);
-            float unitDiscountedPrice = _unitPrice * ((float)(100 - discountPerc) / 100);
-            float costDiscoutedBooks = numberOfDistinctBooks * unitDiscountedPrice;
+            // all the other case ;)
+            float discountPerc = GetDiscountPercentage(numberOfDistinctBooks);
+            float unitBookDiscountedPrice = _unitPrice * ((float)(100 - discountPerc) / 100);
+            float costDiscoutedBooks = numberOfDistinctBooks * unitBookDiscountedPrice;
 
             var numberOfBookNotSubjectToDiscount = numberOfBooksInBasket - numberOfDistinctBooks;
             var costNotDiscoutedBooks = numberOfBookNotSubjectToDiscount * _unitPrice;
 
             basketCost = (float)(costDiscoutedBooks + costNotDiscoutedBooks);
-
-      
             return basketCost;
 
         }
 
-        private float GetDiscountPercentage(int numberOfBooksInBasket)
+        private float GetDiscountPercentage(int numberOfDistinctBooks)
         {
-            var discountSelector = (numberOfBooksInBasket > _discounts.Count()) ? (_discounts.Count() - 1) : (numberOfBooksInBasket - 2);
+            var discountSelector = (numberOfDistinctBooks > _discounts.Count()) ? (_discounts.Count() - 1) : (numberOfDistinctBooks - 2);
             return _discounts[discountSelector];
         }
     }
