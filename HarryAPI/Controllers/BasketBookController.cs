@@ -19,7 +19,7 @@ namespace HarryAPI.Controllers
         }
 
         [HttpPost]
-        public double PostBasket([FromBody] ShoppingBasketRequest request)
+        public float PostBasket([FromBody] ShoppingBasketRequest request)
         {
             BasketBook basketBook = new BasketBook(request.shoppingBasket, request.discountAvailable, request.unitPrice);
 

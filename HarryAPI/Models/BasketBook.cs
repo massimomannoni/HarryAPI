@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Net.Http.Headers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace HarryAPI
 {
@@ -16,9 +18,9 @@ namespace HarryAPI
             _unitPrice = unitPrice;
         }
 
-        public double CalculateBasketCost()
+        public float CalculateBasketCost()
         {
-            double basketCost = 0;
+            float basketCost = 0;
 
             // select distinct books 
             // calculate the relative discount getting the relative index from the array
@@ -29,28 +31,32 @@ namespace HarryAPI
             // if value == 1 there's no discount
             int numberOfBooksInBasket = _books.Count;
             if (numberOfBooksInBasket == 1)
-            {
-                basketCost = _unitPrice;
-            }
-            else
-            {
-                // enter here only when > 1
-                var numberOfDistinctBooks = _books.GroupBy(b => b.title).ToList();
+                return _unitPrice;
 
+            // enter here only when > 1
+            var numberOfDistinctBooks = _books.GroupBy(b => b.title).Count();
+            if (numberOfDistinctBooks == 1)
+                return _unitPrice * numberOfBooksInBasket;
 
-                // check correct index
-                int discount = _discounts[numberOfDistinctBooks.Count - 2];
-                double costDiscoutedBooks = (((numberOfDistinctBooks.Count * _unitPrice) * (100 - discount)) / 100);
+            //  var discountSelector = GetDiscountPercentage(numberOfBooksInBasket > _discounts.Count()) ? (_discounts.Count() -1) : (numberOfBooksInBasket - 2) ;
+            float discountPerc = GetDiscountPercentage(numberOfBooksInBasket);
+            float unitDiscountedPrice = _unitPrice * ((float)(100 - discountPerc) / 100);
+            float costDiscoutedBooks = numberOfDistinctBooks * unitDiscountedPrice;
 
-                var numberOfBookNotSubjectToDiscount = numberOfBooksInBasket - numberOfDistinctBooks.Count();
-                var costNotDiscoutedBooks = numberOfBookNotSubjectToDiscount * _unitPrice;
+            var numberOfBookNotSubjectToDiscount = numberOfBooksInBasket - numberOfDistinctBooks;
+            var costNotDiscoutedBooks = numberOfBookNotSubjectToDiscount * _unitPrice;
 
-                basketCost = costDiscoutedBooks + costNotDiscoutedBooks;
+            basketCost = (float)(costDiscoutedBooks + costNotDiscoutedBooks);
 
-            }
-
+      
             return basketCost;
 
+        }
+
+        private float GetDiscountPercentage(int numberOfBooksInBasket)
+        {
+            var discountSelector = (numberOfBooksInBasket > _discounts.Count()) ? (_discounts.Count() - 1) : (numberOfBooksInBasket - 2);
+            return _discounts[discountSelector];
         }
     }
 }
