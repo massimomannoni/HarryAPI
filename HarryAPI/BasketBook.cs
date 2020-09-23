@@ -9,16 +9,17 @@ namespace HarryAPI
     {
         private List<Book> _books;
         private int[] _discounts;
-        public BasketBook(List<Book> selectedBook, int[] discounts)
+        private int _unitPrice;
+        public BasketBook(List<Book> selectedBook, int[] discounts, int unitPrice)
         {
             _books = selectedBook;
             _discounts = discounts;
+            _unitPrice = unitPrice;
         }
 
         public double CalculateBasketCost()
         {
-            int basketCost = 0;
-
+            double basketCost = 0;
 
             // select distinct books 
             // calculate the relative discount getting the relative index from the array
@@ -30,16 +31,17 @@ namespace HarryAPI
             int numberOfBooksInBasket = _books.Count;
             if (numberOfBooksInBasket == 1)
             {
-                basketCost = _books.First().price;
+                basketCost = _unitPrice;
             }
             else
             {
                 // enter here only when > 1
-                var numberOfDistinctBooks = _selectedBook.Distinct().ToList();
-                var costDiscoutedBooks = (numberOfDistinctBooks.Count * price);
+                var numberOfDistinctBooks = _books.Distinct().ToList();
+                int discount = _discounts[numberOfDistinctBooks.Count - 2];
+                double costDiscoutedBooks = (numberOfDistinctBooks.Count * _unitPrice) * (100 - discount);
 
-                var numberOfBookNotSubjectToDiscount = numberOfBasketBooks - numberOfDistinctBooks.Count();
-                var costNotDiscoutedBooks = numberOfBookNotSubjectToDiscount * price;
+                var numberOfBookNotSubjectToDiscount = numberOfBooksInBasket - numberOfDistinctBooks.Count();
+                var costNotDiscoutedBooks = numberOfBookNotSubjectToDiscount * _unitPrice;
 
                 basketCost = costDiscoutedBooks + costNotDiscoutedBooks;
 

@@ -8,9 +8,7 @@ namespace HarryAPI.Controllers
 {
     public class BasketBookController : Controller
     {
-        const int unitPrice = 8;
-
- 
+      
 
         [HttpPost]
         public Task<double> PostBasket()
